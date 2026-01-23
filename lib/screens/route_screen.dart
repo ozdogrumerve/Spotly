@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class RouteScreen extends StatefulWidget {
   final LatLng destination;
@@ -21,9 +23,6 @@ class _RouteScreenState extends State<RouteScreen> {
   final Set<Polyline> _polylines = {};
   List<LatLng> _routeCoords = [];
   String? _mapStyle;
-
-  // Google Cloud’da oluşturduğun Directions / Routes API anahtarı
-  final String _apiKey = 'AIzaSyA-kEuppjpvgPjA3jmt0GsIKEha3tr5m5s';
 
   Future<void> openGoogleMapsNavigation(LatLng destination) async {
     final Uri url = Uri.parse(
@@ -75,7 +74,12 @@ class _RouteScreenState extends State<RouteScreen> {
   }
 
   Future<void> _drawRoute(LatLng start, LatLng end) async {
-    final polylinePoints = PolylinePoints(apiKey: _apiKey);
+    print("ROUTE FUNCTION CALLED");
+
+    final polylinePoints = PolylinePoints(
+      apiKey: dotenv.env['GOOGLE_DIRECTIONS_API_KEY']!,
+      preferRoutesApi: false,
+    );
 
     final PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       request: PolylineRequest(
@@ -84,7 +88,7 @@ class _RouteScreenState extends State<RouteScreen> {
         mode: TravelMode.driving,
       ),
     );
-
+    
     if (result.points.isNotEmpty) {
       _routeCoords = result.points
           .map((pt) => LatLng(pt.latitude, pt.longitude))

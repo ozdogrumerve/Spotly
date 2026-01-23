@@ -4,11 +4,14 @@ import 'package:spotly/screens/first_screen.dart';
 import 'package:spotly/services/theme_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
+  await dotenv.load(fileName: ".env");
 
   // Daha önce kayıtlı tema ayarını yükle
   await ThemeController.instance.loadTheme();

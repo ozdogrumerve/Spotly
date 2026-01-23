@@ -50,6 +50,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   flutter_polyline_points: ^3.1.0
   url_launcher: ^6.3.2
+  flutter_dotenv: ^5.1.0
 
 
 dependency_overrides:
@@ -86,6 +87,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - .env
     - assets/images/logo.png
     - assets/images/background.jpg
     - assets/map_styles/dark_map.json
