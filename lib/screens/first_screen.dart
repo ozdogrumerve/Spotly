@@ -154,7 +154,7 @@ class _FirstScreenState extends State<FirstScreen> with WidgetsBindingObserver {
                                   style: GoogleFonts.dancingScript(
                                     fontSize: 57,
                                     fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 68, 123, 233),
+                                    color: const Color(0xFF153A50),
                                     shadows: [
                                       Shadow(
                                           offset: Offset(1, 1),
@@ -174,7 +174,7 @@ class _FirstScreenState extends State<FirstScreen> with WidgetsBindingObserver {
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                     color:
-                                        const Color.fromARGB(255, 72, 105, 171),
+                                        const Color(0xFF5B8094),
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -186,7 +186,6 @@ class _FirstScreenState extends State<FirstScreen> with WidgetsBindingObserver {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
                               elevation: 0,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -198,7 +197,7 @@ class _FirstScreenState extends State<FirstScreen> with WidgetsBindingObserver {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black87),
+                                  ),
                             ),
                           ),
                         ),
