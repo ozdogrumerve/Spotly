@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'map_screen.dart';
 import 'places_screen.dart';
 import 'fav_places_screen.dart';
+import '/widgets/discovery_wheel.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -11,126 +13,81 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Ana Ekran',
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 40),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Column(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Ana Ekran',
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 40),
 
-                // Haritaya Geç
-                _HomeNavButton(
-                  icon: Icons.location_on,
-                  heroTag: 'home-map',
-                  text: 'Haritaya Geç',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        transitionDuration: const Duration(milliseconds: 700),
-                        reverseTransitionDuration: const Duration(milliseconds: 500),
-                        pageBuilder: (_, animation, secondaryAnimation) {
-                          return const MapScreen();
-                        },
-                        transitionsBuilder: (_, animation, __, child) {
-                          final curved = CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeInOutCubic,
-                          );
+                  // Haritaya Geç
+                  _HomeNavButton(
+                    icon: Icons.location_on,
+                    heroTag: 'home-map',
+                    text: 'Haritaya Geç',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        _fadeRoute(const MapScreen())
+                      );
 
-                          return FadeTransition(
-                            opacity: curved,
-                            child: ScaleTransition(
-                              scale: Tween<double>(begin: 0.98, end: 1.0).animate(curved),
-                              child: child,
-                            ),
-                          );
-                        },
-                      ),
-                    );
+                    },
+                  ),
+                  const SizedBox(height: 16),
 
-                  },
-                ),
-                const SizedBox(height: 16),
+                  // Mekanlarım
+                  _HomeNavButton(
+                    icon: Icons.menu,
+                    heroTag: 'home-places',
+                    text: 'Mekanlarım',
+                    //borderColor: border,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        _fadeRoute(const PlacesScreen())
+                      );
 
-                // Mekanlarım
-                _HomeNavButton(
-                  icon: Icons.menu,
-                  heroTag: 'home-places',
-                  text: 'Mekanlarım',
-                  //borderColor: border,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        transitionDuration: const Duration(milliseconds: 700),
-                        reverseTransitionDuration: const Duration(milliseconds: 500),
-                        pageBuilder: (_, animation, secondaryAnimation) {
-                          return const PlacesScreen();
-                        },
-                        transitionsBuilder: (_, animation, __, child) {
-                          final curved = CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeInOutCubic,
-                          );
+                    },
+                  ),
+                  const SizedBox(height: 16),
 
-                          return FadeTransition(
-                            opacity: curved,
-                            child: ScaleTransition(
-                              scale: Tween<double>(begin: 0.98, end: 1.0).animate(curved),
-                              child: child,
-                            ),
-                          );
-                        },
-                      ),
-                    );
+                  // Favori Mekanlarım
+                  _HomeNavButton(
+                    icon: Icons.favorite_border,
+                    heroTag: 'home-favs',
+                    text: 'Favori Mekanlarım',
+                    //borderColor: border,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        _fadeRoute(const FavPlacesScreen())
+                      );
 
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Favori Mekanlarım
-                _HomeNavButton(
-                  icon: Icons.favorite_border,
-                  heroTag: 'home-favs',
-                  text: 'Favori Mekanlarım',
-                  //borderColor: border,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        transitionDuration: const Duration(milliseconds: 700),
-                        reverseTransitionDuration: const Duration(milliseconds: 500),
-                        pageBuilder: (_, animation, secondaryAnimation) {
-                          return const FavPlacesScreen();
-                        },
-                        transitionsBuilder: (_, animation, __, child) {
-                          final curved = CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeInOutCubic,
-                          );
-
-                          return FadeTransition(
-                            opacity: curved,
-                            child: ScaleTransition(
-                              scale: Tween<double>(begin: 0.98, end: 1.0).animate(curved),
-                              child: child,
-                            ),
-                          );
-                        },
-                      ),
-                    );
-
-                  },
-                ),
-              ],
+                    },
+                  ),              
+                ],
+              ),
             ),
-          ),
+            //🔹 ÇARK
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        child: SizedBox(
+                          height: 60,
+                          child: DiscoveryWheel(),
+                        ),
+                      ),
+                    ),
+                  ),    
+          ]
         ),
       ),
     );
@@ -203,4 +160,26 @@ class _HomeNavButton extends StatelessWidget {
       ),
     );
   }
+}
+
+PageRouteBuilder _fadeRoute(Widget page) {
+  return PageRouteBuilder(
+    transitionDuration: const Duration(milliseconds: 700),
+    reverseTransitionDuration: const Duration(milliseconds: 500),
+    pageBuilder: (_, animation, __) => page,
+    transitionsBuilder: (_, animation, __, child) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeInOutCubic,
+      );
+
+      return FadeTransition(
+        opacity: curved,
+        child: ScaleTransition(
+          scale: Tween(begin: 0.98, end: 1.0).animate(curved),
+          child: child,
+        ),
+      );
+    },
+  );
 }
