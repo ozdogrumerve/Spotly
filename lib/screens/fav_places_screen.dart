@@ -32,67 +32,47 @@ class FavPlacesScreen extends StatelessWidget {
           // 2. Görüntüle
           return ListView(
             padding: const EdgeInsets.all(16),
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Favori Mekanların',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Favoriye eklediğin mekanlar burada listelenir',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
-              ),
+            children: grouped.entries.map((entry) {
+              final kategori = entry.key;
+              final places = entry.value;
 
-              // 🔹 KATEGORİLER
-              ...grouped.entries.map((entry) {
-                final kategori = entry.key;
-                final places = entry.value;
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      kategori,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    kategori,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 8),
-                    ...places.map((place) {
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 6),
-                        child: ListTile(
-                          leading: const Icon(Icons.favorite, color: Colors.red),
-                          title: Text(place.isim),
-                          subtitle: Text(place.kategori),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => NoteDetailScreen(
-                                  place: place,
-                                  isFavorite: true,
-                                ),
+                  ),
+                  const SizedBox(height: 8),
+                  ...places.map((place) {
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        leading: const Icon(Icons.favorite, color: Colors.red),
+                        title: Text(place.isim),
+                        subtitle: Text(place.kategori),
+                        trailing:
+                            const Icon(Icons.arrow_forward_ios_rounded),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => NoteDetailScreen(
+                                place: place,
+                                isFavorite: true,
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    }).toList(),
-                    const SizedBox(height: 20), // Kategori arası boşluk
-                  ],
-                );
-              })
-            ]
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }).toList(),
+                  const SizedBox(height: 20), // Kategori arası boşluk
+                ],
+              );
+            }).toList(),
           );
         },
       ),
