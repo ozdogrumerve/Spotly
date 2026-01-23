@@ -24,8 +24,27 @@ class _PlacesScreenState extends State<PlacesScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
+      
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Mekanlarını Yönet',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Eklediğin tüm mekanlar burada listelenir',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+          
           Expanded(
             child: StreamBuilder<List<PlaceModel>>(
               stream: FirestoreService().getUserPlacesStream(),

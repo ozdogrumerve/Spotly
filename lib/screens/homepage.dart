@@ -26,12 +26,34 @@ class HomePage extends StatelessWidget {
                 // Haritaya Geç
                 _HomeNavButton(
                   icon: Icons.location_on,
+                  heroTag: 'home-map',
                   text: 'Haritaya Geç',
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const MapScreen()),
+                      PageRouteBuilder(
+                        transitionDuration: const Duration(milliseconds: 700),
+                        reverseTransitionDuration: const Duration(milliseconds: 500),
+                        pageBuilder: (_, animation, secondaryAnimation) {
+                          return const MapScreen();
+                        },
+                        transitionsBuilder: (_, animation, __, child) {
+                          final curved = CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeInOutCubic,
+                          );
+
+                          return FadeTransition(
+                            opacity: curved,
+                            child: ScaleTransition(
+                              scale: Tween<double>(begin: 0.98, end: 1.0).animate(curved),
+                              child: child,
+                            ),
+                          );
+                        },
+                      ),
                     );
+
                   },
                 ),
                 const SizedBox(height: 16),
@@ -39,13 +61,35 @@ class HomePage extends StatelessWidget {
                 // Mekanlarım
                 _HomeNavButton(
                   icon: Icons.menu,
+                  heroTag: 'home-places',
                   text: 'Mekanlarım',
                   //borderColor: border,
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const PlacesScreen()),
+                      PageRouteBuilder(
+                        transitionDuration: const Duration(milliseconds: 700),
+                        reverseTransitionDuration: const Duration(milliseconds: 500),
+                        pageBuilder: (_, animation, secondaryAnimation) {
+                          return const PlacesScreen();
+                        },
+                        transitionsBuilder: (_, animation, __, child) {
+                          final curved = CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeInOutCubic,
+                          );
+
+                          return FadeTransition(
+                            opacity: curved,
+                            child: ScaleTransition(
+                              scale: Tween<double>(begin: 0.98, end: 1.0).animate(curved),
+                              child: child,
+                            ),
+                          );
+                        },
+                      ),
                     );
+
                   },
                 ),
                 const SizedBox(height: 16),
@@ -53,14 +97,35 @@ class HomePage extends StatelessWidget {
                 // Favori Mekanlarım
                 _HomeNavButton(
                   icon: Icons.favorite_border,
+                  heroTag: 'home-favs',
                   text: 'Favori Mekanlarım',
                   //borderColor: border,
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (_) => const FavPlacesScreen()),
+                      PageRouteBuilder(
+                        transitionDuration: const Duration(milliseconds: 700),
+                        reverseTransitionDuration: const Duration(milliseconds: 500),
+                        pageBuilder: (_, animation, secondaryAnimation) {
+                          return const FavPlacesScreen();
+                        },
+                        transitionsBuilder: (_, animation, __, child) {
+                          final curved = CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeInOutCubic,
+                          );
+
+                          return FadeTransition(
+                            opacity: curved,
+                            child: ScaleTransition(
+                              scale: Tween<double>(begin: 0.98, end: 1.0).animate(curved),
+                              child: child,
+                            ),
+                          );
+                        },
+                      ),
                     );
+
                   },
                 ),
               ],
@@ -77,12 +142,12 @@ class _HomeNavButton extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTap,
-    //this.borderColor,
+    required this.heroTag,
   });
 
   final IconData icon;
   final String text;
-  //final Color? borderColor;
+  final String heroTag;
   final VoidCallback onTap;
 
   @override
@@ -98,34 +163,42 @@ class _HomeNavButton extends StatelessWidget {
         ? theme.colorScheme.onSurface
         : Colors.white;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(15),
-      child: Container(
-        height: 55,
-        decoration: BoxDecoration(
-          color: bgColor,
+    return Hero(
+      tag: heroTag,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(15),
-          //border: borderColor != null ? Border.all(color: borderColor!) : null,
-          boxShadow: const [
-            BoxShadow(
-                color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon,),
-            const SizedBox(width: 8),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: fgColor,
-              ),
+          child: Container(
+            height: 55,
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 6,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
-          ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: fgColor),
+                const SizedBox(width: 8),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: fgColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
