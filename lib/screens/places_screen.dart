@@ -76,6 +76,11 @@ class _PlacesScreenState extends State<PlacesScreen> {
                             child: ListTile(
                               title: Text(place.isim),
                               subtitle: Text(place.kategori),
+                              selected: isSelected,
+                              selectedTileColor: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withValues(alpha: 0.2),
                               trailing: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(

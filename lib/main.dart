@@ -31,20 +31,8 @@ class SpotlyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: mode, // aktif tema buradan kontrol edilir
-          theme: ThemeData(
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: Colors.white,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            scaffoldBackgroundColor: const Color(0xFF121212),
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              brightness: Brightness.dark,
-            ),
-          ),
-
+          theme: lightTheme,
+          darkTheme: darkTheme,
           routes: {
             '/addOrUpdatePlace': (context) => const AddUpdateScreen(),
           },

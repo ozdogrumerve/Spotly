@@ -70,7 +70,7 @@ class _MapScreenState extends State<MapScreen> {
 
     final defaultIcon = BitmapDescriptor.defaultMarker;
     final blueIcon =
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
 
     for (int i = 0; i < 5; i++) {
       _updateSingleMarkerIcon(markerId, defaultIcon);
@@ -302,17 +302,10 @@ class _MapScreenState extends State<MapScreen> {
     final bool hasHalfStar = (rating - fullStars) >= 0.5;
     final int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-    // Her iki buton için de ortak stil (Beyaz arka plan, Mavi yazı, Mavi kenarlık)
-    final ButtonStyle outlinedButtonStyle = ElevatedButton.styleFrom(
-      backgroundColor: Colors.white,
-      foregroundColor: Theme.of(context).primaryColor,
-      elevation: 0,
-      side: BorderSide(color: Theme.of(context).primaryColor),
-    );
-
     return Card(
       elevation: 8,
       margin: EdgeInsets.zero,
+      color: Theme.of(context).cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -362,7 +355,6 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       );
                     },
-                    style: outlinedButtonStyle, // Ortak stil kullanıldı
                     child: const Text('Detay'),
                   ),
                 ),
@@ -379,7 +371,6 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       );
                     },
-                    style: outlinedButtonStyle, // Ortak stil kullanıldı
                     child: const Text('Rota Aç'),
                   ),
                 ),

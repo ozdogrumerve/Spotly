@@ -27,8 +27,6 @@ class HomePage extends StatelessWidget {
                 _HomeNavButton(
                   icon: Icons.location_on,
                   text: 'Haritaya Geç',
-                  bgColor: const Color.fromARGB(255, 255, 255, 255),
-                  fgColor: const Color.fromARGB(255, 0, 0, 0),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -42,8 +40,6 @@ class HomePage extends StatelessWidget {
                 _HomeNavButton(
                   icon: Icons.menu,
                   text: 'Mekanlarım',
-                  bgColor: Colors.white,
-                  fgColor: Colors.black87,
                   //borderColor: border,
                   onTap: () {
                     Navigator.push(
@@ -58,8 +54,6 @@ class HomePage extends StatelessWidget {
                 _HomeNavButton(
                   icon: Icons.favorite_border,
                   text: 'Favori Mekanlarım',
-                  bgColor: Colors.white,
-                  fgColor: Colors.black87,
                   //borderColor: border,
                   onTap: () {
                     Navigator.push(
@@ -82,21 +76,28 @@ class _HomeNavButton extends StatelessWidget {
   const _HomeNavButton({
     required this.icon,
     required this.text,
-    required this.bgColor,
-    required this.fgColor,
     required this.onTap,
     //this.borderColor,
   });
 
   final IconData icon;
   final String text;
-  final Color bgColor;
-  final Color fgColor;
   //final Color? borderColor;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final bgColor = isDark
+        ? theme.colorScheme.surface
+        : theme.colorScheme.primary;
+
+    final fgColor = isDark
+        ? theme.colorScheme.onSurface
+        : Colors.white;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(15),
@@ -114,14 +115,14 @@ class _HomeNavButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: fgColor),
+            Icon(icon,),
             const SizedBox(width: 8),
             Text(
               text,
               style: TextStyle(
                 fontSize: 18,
-                color: fgColor,
                 fontWeight: FontWeight.w600,
+                color: fgColor,
               ),
             ),
           ],
