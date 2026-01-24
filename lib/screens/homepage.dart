@@ -12,6 +12,82 @@ import 'dart:math';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+  void _showPlacePreview(
+    BuildContext context,
+    PlaceModel place,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 🔹 Drag handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+
+              // 🔹 Mekan adı
+              Text(
+                place.isim,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+
+              const SizedBox(height: 6),
+
+              // 🔹 Kategori
+              Text(
+                place.kategori,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+
+              const SizedBox(height: 20),
+
+              // 🔹 Rota butonu
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.directions),
+                  label: const Text('Rotaya Geç'),
+                  onPressed: () {
+                    Navigator.pop(context); // sheet kapansın
+
+                    Navigator.push(
+                      context,
+                      _fadeRoute(
+                        RouteScreen(
+                          destination: LatLng(place.lat!, place.lng!),
+                          place: place,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +137,8 @@ class HomePage extends StatelessWidget {
       final sourceList = nearby.isNotEmpty ? nearby : places;
 
       final randomPlace = sourceList[Random().nextInt(sourceList.length)];
-
-      Navigator.push(
-        context,
-        _fadeRoute(
-          RouteScreen(
-            destination: LatLng(
-              randomPlace.lat!,
-              randomPlace.lng!,
-            ),
-            place: randomPlace,
-          ),
-        ),
-      );
+      _showPlacePreview(context, randomPlace);
+      
     }
 
     return Scaffold(
