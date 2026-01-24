@@ -32,18 +32,11 @@ class _DiscoveryWheelState extends State<DiscoveryWheel> {
           height: 180,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: theme.colorScheme.primary.withOpacity(0.15),
+            color: theme.colorScheme.primary.withAlpha(35),
             border: Border.all(
               color: theme.colorScheme.primary,
               width: 2,
             ),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 12,
-                offset: Offset(0, 6),
-              ),
-            ],
           ),
           child: const Center(
             child: Icon(

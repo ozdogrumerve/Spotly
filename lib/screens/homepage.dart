@@ -75,18 +75,18 @@ class HomePage extends StatelessWidget {
               ),
             ),
             //🔹 ÇARK
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 24),
-                        child: SizedBox(
-                          height: 60,
-                          child: DiscoveryWheel(),
-                        ),
-                      ),
-                    ),
-                  ),    
+            Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: SizedBox(
+                    height: 140, 
+                    width: 140,
+                    child: DiscoveryWheel(),
+                  ),
+                ),
+              ),
+            ),
           ]
         ),
       ),
