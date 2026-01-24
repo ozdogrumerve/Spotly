@@ -6,13 +6,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 
 class RouteScreen extends StatefulWidget {
   final LatLng destination;
+  final PlaceModel place;
 
-  const RouteScreen({super.key, required this.destination, required PlaceModel place});
+  const RouteScreen(
+      {super.key, required this.destination, required this.place});
 
   @override
   State<RouteScreen> createState() => _RouteScreenState();
@@ -26,11 +29,9 @@ class _RouteScreenState extends State<RouteScreen> {
   String? _mapStyle;
 
   Future<void> openGoogleMapsNavigation(LatLng destination) async {
-    final Uri url = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1'
-      '&destination=${destination.latitude},${destination.longitude}'
-      '&travelmode=driving'
-    );
+    final Uri url = Uri.parse('https://www.google.com/maps/dir/?api=1'
+        '&destination=${destination.latitude},${destination.longitude}'
+        '&travelmode=driving');
 
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
@@ -38,7 +39,6 @@ class _RouteScreenState extends State<RouteScreen> {
       throw 'Google Maps açılamadı: $url';
     }
   }
-
 
   @override
   void initState() {
@@ -82,18 +82,18 @@ class _RouteScreenState extends State<RouteScreen> {
       preferRoutesApi: false,
     );
 
-    final PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+    final PolylineResult result =
+        await polylinePoints.getRouteBetweenCoordinates(
       request: PolylineRequest(
         origin: PointLatLng(start.latitude, start.longitude),
         destination: PointLatLng(end.latitude, end.longitude),
         mode: TravelMode.driving,
       ),
     );
-    
+
     if (result.points.isNotEmpty) {
-      _routeCoords = result.points
-          .map((pt) => LatLng(pt.latitude, pt.longitude))
-          .toList();
+      _routeCoords =
+          result.points.map((pt) => LatLng(pt.latitude, pt.longitude)).toList();
 
       setState(() {
         _polylines.clear();
@@ -173,7 +173,23 @@ class _RouteScreenState extends State<RouteScreen> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton.icon(
-                onPressed: () => openGoogleMapsNavigation(widget.destination),
+                onPressed: () async {
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user == null) return;
+
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.uid)
+                      .set(
+                    {
+                      'lastVisitedPlaceId': widget.place.id,
+                      'lastVisitedAt': FieldValue.serverTimestamp(),
+                    },
+                    SetOptions(merge: true),
+                  );
+
+                  openGoogleMapsNavigation(widget.destination);
+                },
                 icon: const Icon(Icons.navigation),
                 label: const Text("Başlat"),
                 style: ElevatedButton.styleFrom(

@@ -10,8 +10,34 @@ import 'fav_places_screen.dart';
 import '/widgets/discovery_wheel.dart';
 import 'dart:math';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  PlaceModel? _lastVisitedPlace;
+  bool _loadingLastVisited = true;
+
+  @override
+    void initState() {
+    super.initState();
+    _loadLastVisitedPlace();
+  }
+
+  Future<void> _loadLastVisitedPlace() async {
+    final place = await FirestoreService().getLastVisitedPlace();
+
+    if (!mounted) return;
+
+    setState(() {
+      _lastVisitedPlace = place;
+      _loadingLastVisited = false;
+    });
+  }
+
   void _showPlacePreview(
     BuildContext context,
     PlaceModel place,
@@ -137,8 +163,7 @@ class HomePage extends StatelessWidget {
       final sourceList = nearby.isNotEmpty ? nearby : places;
 
       final randomPlace = sourceList[Random().nextInt(sourceList.length)];
-      _showPlacePreview(context, randomPlace);
-      
+      _showPlacePreview(context, randomPlace);  
     }
 
     return Scaffold(
@@ -147,11 +172,13 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Ana Ekran',
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white, 
+                    fontSize: 26, 
+                    fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 40),
 
@@ -192,6 +219,43 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
+
+          if (!_loadingLastVisited && _lastVisitedPlace != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              child: Card(
+                elevation: 6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Son ziyaret edilen mekan',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _lastVisitedPlace!.isim,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _lastVisitedPlace!.kategori,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
           // 🔹 ÇARK + YAZI
           Expanded(
             child: Column(

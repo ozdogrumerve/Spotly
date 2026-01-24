@@ -75,5 +75,36 @@ class FirestoreService {
         .doc(placeId)
         .update({'favori': isFav});
   }
+
+  Future<PlaceModel?> getLastVisitedPlace() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (!userDoc.exists) return null;
+
+    final data = userDoc.data();
+    if (data == null || !data.containsKey('lastVisitedPlaceId')) {
+      return null;
+    }
+
+    final placeId = data['lastVisitedPlaceId'];
+
+    final placeDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('places')
+        .doc(placeId)
+        .get();
+
+    if (!placeDoc.exists) return null;
+
+    return PlaceModel.fromMap(placeDoc.id, placeDoc.data()!);
+  }
+
 }
 
