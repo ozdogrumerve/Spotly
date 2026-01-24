@@ -18,6 +18,11 @@ class FirestoreService {
           .toList();
     });
   }
+  
+  Future<List<PlaceModel>> getUserPlacesOnce() async {
+    final snapshot = await getUserPlacesStream().first;
+    return snapshot;
+  }
 
   Stream<List<PlaceModel>> getUserFavoritePlacesStream() {
     final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -71,3 +76,4 @@ class FirestoreService {
         .update({'favori': isFav});
   }
 }
+

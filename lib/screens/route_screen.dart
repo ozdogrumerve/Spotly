@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:spotly/models/place_model.dart';
 import 'package:spotly/services/theme_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class RouteScreen extends StatefulWidget {
   final LatLng destination;
 
-  const RouteScreen({super.key, required this.destination});
+  const RouteScreen({super.key, required this.destination, required PlaceModel place});
 
   @override
   State<RouteScreen> createState() => _RouteScreenState();

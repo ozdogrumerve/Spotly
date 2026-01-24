@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class DiscoveryWheel extends StatefulWidget {
-  const DiscoveryWheel({super.key});
+  final VoidCallback onSpin;
+
+  const DiscoveryWheel({
+    super.key,
+    required this.onSpin,
+  });
 
   @override
   State<DiscoveryWheel> createState() => _DiscoveryWheelState();
@@ -9,6 +14,7 @@ class DiscoveryWheel extends StatefulWidget {
 
 class _DiscoveryWheelState extends State<DiscoveryWheel> {
   double _rotation = 0;
+  double _dragAmount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +24,20 @@ class _DiscoveryWheelState extends State<DiscoveryWheel> {
       onPanUpdate: (details) {
         setState(() {
           _rotation += details.delta.dx * 0.01;
+          _dragAmount += details.delta.dx.abs();
         });
       },
+
       onPanEnd: (_) {
-        _onSpinEnd(context);
+        // 🔑 Eşik: gerçekten çevrilmiş mi?
+        if (_dragAmount > 40) {
+          widget.onSpin(); // 
+        }
+
+        // reset
+        _dragAmount = 0;
       },
+
       child: AnimatedRotation(
         turns: _rotation,
         duration: const Duration(milliseconds: 300),
@@ -45,15 +60,6 @@ class _DiscoveryWheelState extends State<DiscoveryWheel> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void _onSpinEnd(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Yeni bir öneri geliyor 👀'),
-        duration: Duration(seconds: 1),
       ),
     );
   }

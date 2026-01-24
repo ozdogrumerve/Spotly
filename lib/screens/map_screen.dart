@@ -366,7 +366,7 @@ class _MapScreenState extends State<MapScreen> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => RouteScreen(
-                            destination: LatLng(place.lat!, place.lng!),
+                            destination: LatLng(place.lat!, place.lng!), place: place
                           ),
                         ),
                       );
