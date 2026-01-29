@@ -219,6 +219,8 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+          
+          SizedBox(height: 50,),
 
           if (!_loadingLastVisited && _lastVisitedPlace != null)
             Padding(
@@ -226,29 +228,35 @@ class _HomePageState extends State<HomePage> {
               child: Card(
                 elevation: 6,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Son ziyaret edilen mekan',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                        'Son Ziyaret Edilen Mekan',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 50),
                       Text(
                         _lastVisitedPlace!.isim,
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Text(
                         _lastVisitedPlace!.kategori,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 15,
+                            ),
                       ),
                     ],
                   ),
