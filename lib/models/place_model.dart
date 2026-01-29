@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class PlaceModel {
   final String id;
   final String isim;
@@ -7,6 +9,8 @@ class PlaceModel {
   final double? lat;
   final double? lng;
   final String note;
+  final DateTime? visitedAt;
+
 
   PlaceModel({
     required this.id,
@@ -17,6 +21,7 @@ class PlaceModel {
     this.lat,
     this.lng,
     required this.note,
+    this.visitedAt,
   });
 
   factory PlaceModel.fromMap(String id, Map<String, dynamic> data) {
@@ -28,7 +33,10 @@ class PlaceModel {
       favori: data['favori'] ?? false,
       lat: data['lat']?.toDouble(),
       lng: data['lng']?.toDouble(),
-      note: data['note'] ?? '',
+      note: data['note'] ?? '', 
+      visitedAt: data['visitedAt'] != null
+        ? (data['visitedAt'] as Timestamp).toDate()
+        : null,
     );
   }
 
@@ -41,6 +49,7 @@ class PlaceModel {
       'lat': lat,
       'lng': lng,
       'note': note,
+      'visitedAt': visitedAt != null ? Timestamp.fromDate(visitedAt!) : null,
     };
   }
 
@@ -51,7 +60,8 @@ class PlaceModel {
     bool? favori,
     double? lat,
     double? lng,
-    String? note,
+    String? note, 
+    DateTime? visitedAt,
   }) {
     return PlaceModel(
       id: id,
@@ -62,6 +72,7 @@ class PlaceModel {
       lat: lat ?? this.lat,
       lng: lng ?? this.lng,
       note: note ?? this.note,
+      visitedAt: visitedAt ?? this.visitedAt,
     );
   }
 }

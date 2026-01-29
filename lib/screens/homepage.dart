@@ -166,6 +166,11 @@ class _HomePageState extends State<HomePage> {
       _showPlacePreview(context, randomPlace);  
     }
 
+    // Last visited card'da date gösteren fonksiyon
+    String _formatDate(DateTime date) {
+      return '${date.day}.${date.month}.${date.year} – ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(children: [
@@ -258,6 +263,12 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 15,
                             ),
                       ),
+                      const SizedBox(height: 24),
+                      if (_lastVisitedPlace!.visitedAt != null)
+                        Text(  
+                          '${_formatDate(_lastVisitedPlace!.visitedAt!)}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(),
+                        ),
                     ],
                   ),
                 ),

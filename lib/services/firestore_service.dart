@@ -93,6 +93,12 @@ class FirestoreService {
     }
 
     final placeId = data['lastVisitedPlaceId'];
+    final visitedAtRaw = data['lastVisitedAt'];
+
+    DateTime? visitedAt;
+    if (visitedAtRaw != null && visitedAtRaw is Timestamp) {
+      visitedAt = visitedAtRaw.toDate();
+    }
 
     final placeDoc = await FirebaseFirestore.instance
         .collection('users')
@@ -103,8 +109,14 @@ class FirestoreService {
 
     if (!placeDoc.exists) return null;
 
-    return PlaceModel.fromMap(placeDoc.id, placeDoc.data()!);
+    final place = PlaceModel.fromMap(placeDoc.id, placeDoc.data()!);
+
+    // visitedAt bilgisini copyWith ile inject edelim
+    return place.copyWith(
+      visitedAt: visitedAt,
+    );
   }
+
 
 }
 
