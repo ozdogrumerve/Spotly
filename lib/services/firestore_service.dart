@@ -117,6 +117,14 @@ class FirestoreService {
     );
   }
 
+  Future<void> setLastVisitedPlace(String placeId) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
 
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'lastVisitedPlaceId': placeId,
+      'lastVisitedAt': Timestamp.now(),
+    });
+  }
 }
 

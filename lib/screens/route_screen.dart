@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:spotly/models/place_model.dart';
+import 'package:spotly/services/firestore_service.dart';
 import 'package:spotly/services/theme_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -135,6 +136,7 @@ class _RouteScreenState extends State<RouteScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,6 +176,8 @@ class _RouteScreenState extends State<RouteScreen> {
               height: 50,
               child: ElevatedButton.icon(
                 onPressed: () async {
+                  await FirestoreService().setLastVisitedPlace(widget.place.id);
+
                   final user = FirebaseAuth.instance.currentUser;
                   if (user == null) return;
 

@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   bool _loadingLastVisited = true;
 
   @override
-    void initState() {
+  void initState() {
     super.initState();
     _loadLastVisitedPlace();
   }
@@ -92,8 +92,19 @@ class _HomePageState extends State<HomePage> {
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.directions),
                   label: const Text('Rotaya Geç'),
-                  onPressed: () {
-                    Navigator.pop(context); // sheet kapansın
+                  onPressed: () async {
+                    // 🔹 Yeni last visited place'i anında yükle
+                    final updated =
+                        await FirestoreService().getLastVisitedPlace();
+
+                    if (!mounted) return;
+
+                    setState(() {
+                      _lastVisitedPlace = updated;
+                      _loadingLastVisited = false;
+                    });
+
+                    Navigator.pop(context);
 
                     Navigator.push(
                       context,
@@ -103,7 +114,14 @@ class _HomePageState extends State<HomePage> {
                           place: place,
                         ),
                       ),
-                    );
+                    ).then((_) async {
+                      final updated = await FirestoreService().getLastVisitedPlace();
+                      if (!mounted) return;
+                      setState(() {
+                        _lastVisitedPlace = updated;
+                        _loadingLastVisited = false;
+                      });
+                    });
                   },
                 ),
               ),
@@ -113,7 +131,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +180,7 @@ class _HomePageState extends State<HomePage> {
       final sourceList = nearby.isNotEmpty ? nearby : places;
 
       final randomPlace = sourceList[Random().nextInt(sourceList.length)];
-      _showPlacePreview(context, randomPlace);  
+      _showPlacePreview(context, randomPlace);
     }
 
     // Last visited card'da date gösteren fonksiyon
@@ -181,9 +198,9 @@ class _HomePageState extends State<HomePage> {
                 const Text(
                   'Ana Ekran',
                   style: TextStyle(
-                    color: Colors.white, 
-                    fontSize: 26, 
-                    fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 40),
 
@@ -193,9 +210,18 @@ class _HomePageState extends State<HomePage> {
                   heroTag: 'home-map',
                   text: 'Haritaya Geç',
                   onTap: () {
-                    Navigator.push(context, _fadeRoute(const MapScreen()));
+                    Navigator.push(context, _fadeRoute(const MapScreen())).then((_) {
+                      FirestoreService().getLastVisitedPlace().then((updatedPlace) {
+                        if (!mounted) return;
+                        setState(() {
+                          _lastVisitedPlace = updatedPlace;
+                          _loadingLastVisited = false;
+                        });
+                      });
+                    });
                   },
                 ),
+
                 const SizedBox(height: 16),
 
                 // Mekanlarım
@@ -224,8 +250,10 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          
-          SizedBox(height: 50,),
+
+          SizedBox(
+            height: 50,
+          ),
 
           if (!_loadingLastVisited && _lastVisitedPlace != null)
             Padding(
@@ -265,9 +293,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 24),
                       if (_lastVisitedPlace!.visitedAt != null)
-                        Text(  
-                          '${_formatDate(_lastVisitedPlace!.visitedAt!)}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(),
+                        Text(
+                          _formatDate(_lastVisitedPlace!.visitedAt!),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(),
                         ),
                     ],
                   ),
