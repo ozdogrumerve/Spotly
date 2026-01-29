@@ -352,8 +352,9 @@ class _HomeNavButton extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final bgColor =
-        isDark ? theme.colorScheme.surface : theme.colorScheme.primary;
+    final bgColor = 
+      isDark ? const Color(0xFF1F1F1F) : theme.colorScheme.primary;
+
 
     final fgColor = isDark ? theme.colorScheme.onSurface : Colors.white;
 
